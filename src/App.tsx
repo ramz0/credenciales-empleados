@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import type { Empleado } from './types/empleado';
 import Credencial from './components/Credencial';
+import ListaEmpleados from './components/ListaEmpleados';
 
 type LoadingState = 'loading' | 'success' | 'error';
 
 function App() {
   const [empleado, setEmpleado] = useState<Empleado | null>(null);
+  const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [loadingState, setLoadingState] = useState<LoadingState>('loading');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [vistaCredencial, setVistaCredencial] = useState(false);
+  const [mostrarLista, setMostrarLista] = useState(false);
 
   useEffect(() => {
-    const cargarEmpleado = async () => {
+    const cargarDatos = async () => {
       // Obtener parámetros de URL
       const urlParams = new URLSearchParams(window.location.search);
       const empleadoId = urlParams.get('id');
@@ -20,14 +23,6 @@ function App() {
       // Determinar si se quiere ver la credencial
       setVistaCredencial(view === 'credencial');
 
-      if (!empleadoId) {
-        setErrorMessage(
-          'No se especificó un ID de empleado. Por favor, use el parámetro ?id=XXX en la URL.'
-        );
-        setLoadingState('error');
-        return;
-      }
-
       try {
         const response = await fetch('./empleados.json');
 
@@ -35,10 +30,18 @@ function App() {
           throw new Error('No se pudo cargar el archivo de empleados');
         }
 
-        const empleados: Empleado[] = await response.json();
+        const todosEmpleados: Empleado[] = await response.json();
+        setEmpleados(todosEmpleados);
+
+        // Si no hay ID, mostrar lista completa
+        if (!empleadoId) {
+          setMostrarLista(true);
+          setLoadingState('success');
+          return;
+        }
 
         // Buscar el empleado por ID
-        const empleadoEncontrado = empleados.find(
+        const empleadoEncontrado = todosEmpleados.find(
           (emp) => emp.id === empleadoId
         );
 
@@ -60,8 +63,13 @@ function App() {
       }
     };
 
-    cargarEmpleado();
+    cargarDatos();
   }, []);
+
+  // Mostrar lista de empleados cuando no hay ID
+  if (mostrarLista && loadingState === 'success') {
+    return <ListaEmpleados empleados={empleados} />;
+  }
 
   // Si se solicita vista de credencial y hay empleado
   if (vistaCredencial && loadingState === 'success' && empleado) {
@@ -81,7 +89,7 @@ function App() {
     );
   }
 
-  // Vista de directorio normal
+  // Vista de directorio individual
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ef4444] to-[#b91c1c] flex items-center justify-center p-5">
       <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-10 text-center">
@@ -113,7 +121,13 @@ function App() {
             <h2 className="text-red-600 text-2xl font-bold mb-2">
               Error al cargar
             </h2>
-            <p className="text-red-700">{errorMessage}</p>
+            <p className="text-red-700 mb-4">{errorMessage}</p>
+            <a
+              href="."
+              className="inline-block px-6 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-colors"
+            >
+              Ver todos los empleados
+            </a>
           </div>
         )}
 
@@ -164,6 +178,15 @@ function App() {
               </div>
             </div>
 
+            {/* Botón volver a la lista */}
+            <div className="mt-6">
+              <a
+                href="."
+                className="inline-block px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+              >
+                ← Ver todos los empleados
+              </a>
+            </div>
           </div>
         )}
       </div>
