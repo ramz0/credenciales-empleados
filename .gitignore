@@ -41,6 +41,7 @@ ENV/
 urls_qr.txt
 urls_qr_solo_urls.txt
 backup_*.json
+qr_codes/
 
 # Sistema
 Thumbs.db
