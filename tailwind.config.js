@@ -12,6 +12,10 @@ export default {
           end: '#b91c1c',
         },
       },
+      screens: {
+        'xxs': '197px',  // Breakpoint custom para pantallas > 196px
+        'xs': '265px',   // Breakpoint custom para pantallas > 264px
+      },
     },
   },
   plugins: [],
