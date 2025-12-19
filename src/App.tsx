@@ -456,9 +456,16 @@ function App() {
               </div>
             </div>
 
+            {/* Vigencia */}
+            <div className="w-full mt-3">
+              <p className="text-center text-sm xs:text-base md:text-lg font-bold text-gray-700">
+                2026-2027
+              </p>
+            </div>
+
             {/* Capa 3: Indicador de Integridad - Solo se muestra si es válido */}
             {isIntegrityValid && (
-              <div className="w-full mt-3 px-3 py-2 rounded-lg bg-green-50">
+              <div className="w-full mt-2 px-3 py-2 rounded-lg bg-green-50">
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-lg">✓</span>
                   <span className="text-xs xs:text-sm font-semibold text-green-700">
@@ -467,9 +474,6 @@ function App() {
                 </div>
                 <p className="text-center text-[10px] xs:text-xs text-green-600 mt-1">
                   Estado: VERIFICADO
-                </p>
-                <p className="text-center text-[10px] xs:text-xs text-green-700 mt-1 font-semibold">
-                  Vigencia: 2026-2027
                 </p>
               </div>
             )}
