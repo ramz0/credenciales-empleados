@@ -6,6 +6,12 @@ import logoImg from '/moneycenter.png';
 
 type LoadingState = 'loading' | 'success' | 'error';
 
+// Función para generar la ruta del QR basada en el nombre del empleado
+const getQRPath = (nombre: string): string => {
+  const qrFileName = nombre.replace(/ /g, '_').toUpperCase() + '.png';
+  return `/qr_codes/${qrFileName}`;
+};
+
 function App() {
   const [empleado, setEmpleado] = useState<Empleado | null>(null);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
@@ -303,6 +309,18 @@ function App() {
         {/* Estado: Success */}
         {loadingState === 'success' && empleado && (
           <div>
+            {/* QR Code del empleado */}
+            <div className="flex justify-center mb-3 xs:mb-4 md:mb-6">
+              <img
+                src={getQRPath(empleado.nombre)}
+                alt={`QR de ${empleado.nombre}`}
+                className="w-32 h-32 xs:w-40 xs:h-40 md:w-48 md:h-48 object-contain border-2 border-gray-200 rounded-xl p-2 bg-white"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+
             {/* Nombre del empleado */}
             <div className="text-[#ef4444] text-base xs:text-lg md:text-3xl font-bold mb-2 xs:mb-3 md:mb-6 leading-tight">
               {empleado.nombre}

@@ -6,6 +6,13 @@ interface ListaEmpleadosProps {
   empleados: Empleado[];
 }
 
+// Función para generar la ruta del QR basada en el nombre del empleado
+const getQRPath = (nombre: string): string => {
+  // Convertir "BRENDA BERMEO MENDOZA" a "BRENDA_BERMEO_MENDOZA.png"
+  const qrFileName = nombre.replace(/ /g, '_').toUpperCase() + '.png';
+  return `/qr_codes/${qrFileName}`;
+};
+
 export default function ListaEmpleados({ empleados }: ListaEmpleadosProps) {
   const [busqueda, setBusqueda] = useState('');
   const [gerenciaFiltro, setGerenciaFiltro] = useState('todas');
@@ -118,6 +125,19 @@ export default function ListaEmpleados({ empleados }: ListaEmpleadosProps) {
                 <span className="text-gray-400 group-hover:text-[#ef4444] transition-colors text-base xs:text-lg md:text-xl">
                   →
                 </span>
+              </div>
+
+              {/* QR Code */}
+              <div className="flex justify-center mb-2 xs:mb-3 md:mb-4">
+                <img
+                  src={getQRPath(empleado.nombre)}
+                  alt={`QR de ${empleado.nombre}`}
+                  className="w-20 h-20 xs:w-24 xs:h-24 md:w-32 md:h-32 object-contain border-2 border-gray-200 rounded-lg p-1"
+                  onError={(e) => {
+                    // Si no se encuentra el QR, ocultar la imagen
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
               </div>
 
               {/* Nombre */}
