@@ -169,6 +169,13 @@ function App() {
               const target = mutation.target as Node;
               const parent = target.parentElement;
 
+              // Ignorar cambios en el timestamp (font-mono) y en el estado de validación (bg-green-50)
+              if (parent?.closest('.font-mono') ||
+                  parent?.closest('.bg-green-50') ||
+                  parent?.closest('.border-t-2')) {
+                continue;
+              }
+
               // Si modifican texto dentro de campos críticos (nombre, puesto, celular)
               if (parent?.closest('.bg-gray-50') || parent?.closest('[class*="ef4444"]')) {
                 setIsIntegrityValid(false);
