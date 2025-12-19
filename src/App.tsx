@@ -94,52 +94,68 @@ function App() {
         originalDataRef.current = empleado.nombre + empleado.puesto + empleado.celular;
       }
 
-      // Verificar cambios en los datos de JavaScript
-      const checkIntegrity = () => {
-        if (empleado) {
-          const currentData = empleado.nombre + empleado.puesto + empleado.celular;
-          if (currentData !== originalDataRef.current) {
-            setIsIntegrityValid(false);
-          }
-        }
-      };
-
-      // Detectar modificaciones directas al DOM HTML
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          // Ignorar cambios en imágenes (QR codes pueden fallar y cambiar display)
-          if (mutation.target instanceof HTMLImageElement) {
-            continue;
-          }
-
-          // Solo detectar cambios en el contenido del texto
-          if (mutation.type === 'characterData') {
-            const target = mutation.target as Node;
-            const parent = target.parentElement;
-
-            // Si modifican texto dentro de campos críticos (nombre, puesto, celular)
-            if (parent?.closest('.bg-gray-50') || parent?.closest('.text-\\[\\#ef4444\\]')) {
+      // Delay de 3 segundos para permitir que la página cargue completamente
+      const startupDelay = setTimeout(() => {
+        // Verificar cambios en los datos de JavaScript
+        const checkIntegrity = () => {
+          if (empleado) {
+            const currentData = empleado.nombre + empleado.puesto + empleado.celular;
+            if (currentData !== originalDataRef.current) {
               setIsIntegrityValid(false);
             }
           }
-        }
-      });
+        };
 
-      // Observar el div principal de la app
-      const targetNode = document.querySelector('.bg-white.rounded-3xl');
-      if (targetNode) {
-        observer.observe(targetNode, {
-          subtree: true,
-          characterData: true,
-          characterDataOldValue: true
+        // Detectar modificaciones directas al DOM HTML
+        let observerActive = false;
+        const observer = new MutationObserver((mutations) => {
+          // Ignorar mutaciones durante los primeros 500ms después de activar el observer
+          if (!observerActive) return;
+
+          for (const mutation of mutations) {
+            // Ignorar cambios en imágenes (QR codes pueden fallar y cambiar display)
+            if (mutation.target instanceof HTMLImageElement) {
+              continue;
+            }
+
+            // Solo detectar cambios en el contenido del texto
+            if (mutation.type === 'characterData') {
+              const target = mutation.target as Node;
+              const parent = target.parentElement;
+
+              // Si modifican texto dentro de campos críticos (nombre, puesto, celular)
+              if (parent?.closest('.bg-gray-50') || parent?.closest('[class*="ef4444"]')) {
+                setIsIntegrityValid(false);
+              }
+            }
+          }
         });
-      }
 
-      const integrityTimer = setInterval(checkIntegrity, 2000);
+        // Observar el div principal de la app
+        const targetNode = document.querySelector('.bg-white.rounded-3xl');
+        if (targetNode) {
+          observer.observe(targetNode, {
+            subtree: true,
+            characterData: true,
+            characterDataOldValue: true
+          });
+
+          // Activar el observer después de un pequeño delay adicional
+          setTimeout(() => {
+            observerActive = true;
+          }, 500);
+        }
+
+        const integrityTimer = setInterval(checkIntegrity, 2000);
+
+        return () => {
+          clearInterval(integrityTimer);
+          observer.disconnect();
+        };
+      }, 3000);
 
       return () => {
-        clearInterval(integrityTimer);
-        observer.disconnect();
+        clearTimeout(startupDelay);
       };
     }
   }, [empleado, mostrarLista]);
