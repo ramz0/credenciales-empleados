@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { Empleado } from './types/empleado';
 import Credencial from './components/Credencial';
 import ListaEmpleados from './components/ListaEmpleados';
+import logoImg from '/moneycenter.png';
 
 type LoadingState = 'loading' | 'success' | 'error';
 
@@ -12,6 +13,12 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [vistaCredencial, setVistaCredencial] = useState(false);
   const [mostrarLista, setMostrarLista] = useState(false);
+
+  // Estados de seguridad
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [isIntegrityValid, setIsIntegrityValid] = useState(true);
+  const [devToolsOpen, setDevToolsOpen] = useState(false);
+  const originalDataRef = useRef<string>('');
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -66,6 +73,109 @@ function App() {
     cargarDatos();
   }, []);
 
+  // Capa 2: Timestamp dinámico
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Capa 3: Detector de integridad mejorado con MutationObserver
+  useEffect(() => {
+    if (empleado && !mostrarLista) {
+      if (!originalDataRef.current) {
+        originalDataRef.current = empleado.nombre + empleado.puesto + empleado.celular;
+      }
+
+      // Verificar cambios en los datos de JavaScript
+      const checkIntegrity = () => {
+        if (empleado) {
+          const currentData = empleado.nombre + empleado.puesto + empleado.celular;
+          if (currentData !== originalDataRef.current) {
+            setIsIntegrityValid(false);
+          }
+        }
+      };
+
+      // Detectar modificaciones directas al DOM HTML
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          // Si detectamos cualquier cambio en el contenido del texto
+          if (mutation.type === 'characterData' || mutation.type === 'childList') {
+            // Verificar si el cambio fue en elementos críticos
+            const target = mutation.target as HTMLElement;
+            const parent = target.parentElement;
+
+            // Si modifican texto dentro de la tarjeta de información
+            if (parent?.closest('.bg-gray-50') || parent?.closest('.text-\\[\\#ef4444\\]')) {
+              setIsIntegrityValid(false);
+            }
+          }
+
+          // Si modifican atributos (como cambiar clases)
+          if (mutation.type === 'attributes') {
+            setIsIntegrityValid(false);
+          }
+        }
+      });
+
+      // Observar el div principal de la app
+      const targetNode = document.querySelector('.bg-white.rounded-3xl');
+      if (targetNode) {
+        observer.observe(targetNode, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          characterDataOldValue: true,
+          attributes: true,
+          attributeOldValue: true
+        });
+      }
+
+      const integrityTimer = setInterval(checkIntegrity, 2000);
+
+      return () => {
+        clearInterval(integrityTimer);
+        observer.disconnect();
+      };
+    }
+  }, [empleado, mostrarLista]);
+
+  // Capa 4: Detector de DevTools
+  useEffect(() => {
+    if (!mostrarLista && empleado) {
+      const detectDevTools = () => {
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+
+        if (widthThreshold || heightThreshold) {
+          setDevToolsOpen(true);
+        }
+      };
+
+      const devToolsTimer = setInterval(detectDevTools, 1000);
+      window.addEventListener('resize', detectDevTools);
+
+      return () => {
+        clearInterval(devToolsTimer);
+        window.removeEventListener('resize', detectDevTools);
+      };
+    }
+  }, [mostrarLista, empleado]);
+
+  // Formatear fecha y hora
+  const formatDateTime = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+  };
+
   // Mostrar lista de empleados cuando no hay ID
   if (mostrarLista && loadingState === 'success') {
     return <ListaEmpleados empleados={empleados} />;
@@ -83,48 +193,107 @@ function App() {
             fin: '2027',
           },
         }}
-        logoUrl="https://via.placeholder.com/200/E31E24/FFFFFF?text=TMC"
+        logoUrl={logoImg}
         nombreEmpresa="THE MONEY CENTER"
       />
     );
   }
 
+  // Si se detecta manipulación del contenido, mostrar pantalla de bloqueo
+  if (!isIntegrityValid && empleado) {
+    return (
+      <div className="min-h-screen bg-red-600 flex flex-col items-center justify-center px-4 py-8">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center">
+          <div className="text-7xl mb-4">🚨</div>
+          <h1 className="text-red-600 text-2xl md:text-3xl font-bold mb-4">
+            CONTENIDO MANIPULADO
+          </h1>
+          <p className="text-gray-700 text-base md:text-lg mb-4 font-semibold">
+            Se está manipulando este contenido
+          </p>
+          <p className="text-gray-600 text-sm md:text-base mb-4">
+            Se ha detectado una modificación no autorizada en la información mostrada.
+          </p>
+          <div className="bg-red-50 rounded-lg p-4 mb-4">
+            <p className="text-red-700 text-sm font-semibold">
+              ⚠️ Este perfil NO es válido
+            </p>
+          </div>
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-gray-500 text-xs">
+              Por seguridad, recargue la página desde el código QR original.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Si se detectan DevTools abiertos, mostrar pantalla de bloqueo
+  if (devToolsOpen && empleado) {
+    return (
+      <div className="min-h-screen bg-red-600 flex flex-col items-center justify-center px-4 py-8">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h1 className="text-red-600 text-2xl md:text-3xl font-bold mb-4">
+            ACCESO BLOQUEADO
+          </h1>
+          <p className="text-gray-700 text-base md:text-lg mb-4">
+            Se ha detectado un intento de manipulación del perfil.
+          </p>
+          <p className="text-gray-600 text-sm md:text-base">
+            Por razones de seguridad, este perfil ha sido bloqueado.
+          </p>
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <p className="text-gray-500 text-xs">
+              Si necesita acceder, cierre las herramientas de desarrollador y recargue la página.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Vista de directorio individual
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#ef4444] to-[#b91c1c] flex items-center justify-center p-5">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-10 text-center">
+    <div className="min-h-screen bg-gradient-to-br from-[#ef4444] to-[#b91c1c] flex items-center justify-center p-2 xs:p-3 md:p-5">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-4 xs:p-5 md:p-10 text-center">
         {/* Logo */}
-        <div className="w-28 h-28 md:w-32 md:h-32 bg-gradient-to-br from-[#ef4444] to-[#b91c1c] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-          <span className="text-white text-5xl md:text-6xl font-bold">TMC</span>
+        <div className="w-20 h-20 xs:w-24 xs:h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center mx-auto mb-4 xs:mb-5 md:mb-8 shadow-lg overflow-hidden bg-white">
+          <img
+            src={logoImg}
+            alt="The Money Center Logo"
+            className="w-full h-full object-contain p-1"
+          />
         </div>
 
         {/* Título */}
-        <h1 className="text-gray-800 text-3xl md:text-4xl font-bold mb-2">
+        <h1 className="text-gray-800 text-xl xs:text-2xl md:text-4xl font-bold mb-1 md:mb-2">
           The Money Center
         </h1>
-        <p className="text-gray-600 text-base md:text-lg mb-8">
+        <p className="text-gray-600 text-xs xs:text-sm md:text-lg mb-4 xs:mb-5 md:mb-8">
           Directorio de Empleados
         </p>
 
         {/* Estado: Loading */}
         {loadingState === 'loading' && (
-          <div className="py-8">
-            <div className="w-16 h-16 border-8 border-gray-200 border-t-[#ef4444] rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando información...</p>
+          <div className="py-5 xs:py-6 md:py-8">
+            <div className="w-10 h-10 xs:w-12 xs:h-12 md:w-16 md:h-16 border-3 xs:border-4 md:border-8 border-gray-200 border-t-[#ef4444] rounded-full animate-spin mx-auto mb-2 xs:mb-3 md:mb-4"></div>
+            <p className="text-gray-600 text-xs xs:text-sm md:text-base">Cargando información...</p>
           </div>
         )}
 
         {/* Estado: Error */}
         {loadingState === 'error' && (
-          <div className="bg-red-50 rounded-2xl p-6 mt-5">
-            <div className="text-6xl mb-3">⚠️</div>
-            <h2 className="text-red-600 text-2xl font-bold mb-2">
+          <div className="bg-red-50 rounded-2xl p-3 xs:p-4 md:p-6 mt-2 xs:mt-3 md:mt-5">
+            <div className="text-3xl xs:text-4xl md:text-6xl mb-2 md:mb-3">⚠️</div>
+            <h2 className="text-red-600 text-base xs:text-lg md:text-2xl font-bold mb-2">
               Error al cargar
             </h2>
-            <p className="text-red-700 mb-4">{errorMessage}</p>
+            <p className="text-red-700 text-[10px] xs:text-xs md:text-base mb-2 xs:mb-3 md:mb-4">{errorMessage}</p>
             <a
               href="."
-              className="inline-block px-6 py-2 bg-[#ef4444] text-white rounded-lg hover:bg-[#dc2626] transition-colors"
+              className="inline-block px-3 py-1.5 xs:px-4 xs:py-2 md:px-6 md:py-2 bg-[#ef4444] text-white text-[10px] xs:text-xs md:text-base rounded-lg hover:bg-[#dc2626] transition-colors active:bg-[#b91c1c]"
             >
               Ver todos los empleados
             </a>
@@ -135,39 +304,69 @@ function App() {
         {loadingState === 'success' && empleado && (
           <div>
             {/* Nombre del empleado */}
-            <div className="text-[#ef4444] text-2xl md:text-3xl font-bold mb-6">
+            <div className="text-[#ef4444] text-base xs:text-lg md:text-3xl font-bold mb-2 xs:mb-3 md:mb-6 leading-tight">
               {empleado.nombre}
             </div>
 
             {/* Tarjeta de información */}
-            <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center py-4 border-b border-gray-200">
-                <span className="text-gray-600 text-sm font-semibold uppercase tracking-wide mb-1 md:mb-0">
+            <div className="bg-gray-50 rounded-2xl p-2 xs:p-3 md:p-6 space-y-1.5 xs:space-y-2 md:space-y-4">
+              <div className="flex flex-col items-center text-center py-1.5 xs:py-2 md:py-4 border-b border-gray-200">
+                <span className="text-gray-600 text-[10px] xs:text-xs md:text-sm font-semibold uppercase tracking-wide mb-0.5">
                   Puesto
                 </span>
-                <span className="text-gray-800 text-lg md:text-xl font-medium text-left md:text-right">
+                <span className="text-gray-800 text-xs xs:text-sm md:text-xl font-medium">
                   {empleado.puesto}
                 </span>
               </div>
 
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center py-4 border-b border-gray-200">
-                <span className="text-gray-600 text-sm font-semibold uppercase tracking-wide mb-1 md:mb-0">
+              <div className="flex flex-col items-center text-center py-1.5 xs:py-2 md:py-4 border-b border-gray-200">
+                <span className="text-gray-600 text-[10px] xs:text-xs md:text-sm font-semibold uppercase tracking-wide mb-0.5">
                   Gerencia
                 </span>
-                <span className="text-gray-800 text-lg md:text-xl font-medium text-left md:text-right">
+                <span className="text-gray-800 text-xs xs:text-sm md:text-xl font-medium break-words">
                   {empleado.gerencia}
                 </span>
               </div>
 
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center py-4">
-                <span className="text-gray-600 text-sm font-semibold uppercase tracking-wide mb-1 md:mb-0">
+              <div className="flex flex-col items-center text-center py-1.5 xs:py-2 md:py-4">
+                <span className="text-gray-600 text-[10px] xs:text-xs md:text-sm font-semibold uppercase tracking-wide mb-0.5">
                   Celular
                 </span>
-                <span className="text-gray-800 text-lg md:text-xl font-medium text-left md:text-right">
+                <a
+                  href={`tel:${empleado.celular}`}
+                  className="text-[#ef4444] text-xs xs:text-sm md:text-xl font-medium hover:underline active:text-[#b91c1c]"
+                >
                   {empleado.celular}
-                </span>
+                </a>
               </div>
             </div>
+
+            {/* Capa 2: Timestamp Dinámico */}
+            <div className="w-full border-t-2 border-gray-200 mt-4 pt-3">
+              <div className="text-center">
+                <p className="text-gray-500 text-[10px] xs:text-xs uppercase tracking-wide mb-1">
+                  Verificado
+                </p>
+                <p className="text-gray-800 text-xs xs:text-sm md:text-base font-mono font-semibold">
+                  {formatDateTime(currentTime)}
+                </p>
+              </div>
+            </div>
+
+            {/* Capa 3: Indicador de Integridad - Solo se muestra si es válido */}
+            {isIntegrityValid && (
+              <div className="w-full mt-3 px-3 py-2 rounded-lg bg-green-50">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-lg">✓</span>
+                  <span className="text-xs xs:text-sm font-semibold text-green-700">
+                    Perfil Válido
+                  </span>
+                </div>
+                <p className="text-center text-[10px] xs:text-xs text-green-600 mt-1">
+                  Estado: VERIFICADO
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
