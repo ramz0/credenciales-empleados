@@ -9,7 +9,7 @@ type LoadingState = 'loading' | 'success' | 'error';
 // Función para generar la ruta del QR basada en el nombre del empleado
 const getQRPath = (nombre: string): string => {
   const qrFileName = nombre.replace(/ /g, '_').toUpperCase() + '.png';
-  return `/qr_codes/${qrFileName}`;
+  return `${import.meta.env.BASE_URL}qr_codes/${qrFileName}`;
 };
 
 function App() {
@@ -107,21 +107,20 @@ function App() {
       // Detectar modificaciones directas al DOM HTML
       const observer = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
-          // Si detectamos cualquier cambio en el contenido del texto
-          if (mutation.type === 'characterData' || mutation.type === 'childList') {
-            // Verificar si el cambio fue en elementos críticos
-            const target = mutation.target as HTMLElement;
+          // Ignorar cambios en imágenes (QR codes pueden fallar y cambiar display)
+          if (mutation.target instanceof HTMLImageElement) {
+            continue;
+          }
+
+          // Solo detectar cambios en el contenido del texto
+          if (mutation.type === 'characterData') {
+            const target = mutation.target as Node;
             const parent = target.parentElement;
 
-            // Si modifican texto dentro de la tarjeta de información
+            // Si modifican texto dentro de campos críticos (nombre, puesto, celular)
             if (parent?.closest('.bg-gray-50') || parent?.closest('.text-\\[\\#ef4444\\]')) {
               setIsIntegrityValid(false);
             }
-          }
-
-          // Si modifican atributos (como cambiar clases)
-          if (mutation.type === 'attributes') {
-            setIsIntegrityValid(false);
           }
         }
       });
@@ -130,12 +129,9 @@ function App() {
       const targetNode = document.querySelector('.bg-white.rounded-3xl');
       if (targetNode) {
         observer.observe(targetNode, {
-          childList: true,
           subtree: true,
           characterData: true,
-          characterDataOldValue: true,
-          attributes: true,
-          attributeOldValue: true
+          characterDataOldValue: true
         });
       }
 
@@ -148,26 +144,37 @@ function App() {
     }
   }, [empleado, mostrarLista]);
 
-  // Capa 4: Detector de DevTools
+  // Capa 4: Detector de DevTools (solo en desktop)
   useEffect(() => {
     if (!mostrarLista && empleado) {
-      const detectDevTools = () => {
-        const threshold = 160;
-        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+      // Detectar si es dispositivo móvil
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+        ('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (window.innerWidth <= 768);
 
-        if (widthThreshold || heightThreshold) {
-          setDevToolsOpen(true);
-        }
-      };
+      // Solo activar detector en desktop
+      if (!isMobile) {
+        const detectDevTools = () => {
+          // Threshold mucho más grande para evitar falsos positivos
+          const threshold = 300;
+          const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+          const heightThreshold = window.outerHeight - window.innerHeight > threshold;
 
-      const devToolsTimer = setInterval(detectDevTools, 1000);
-      window.addEventListener('resize', detectDevTools);
+          // Ambas condiciones deben cumplirse para considerar DevTools abierto
+          if (widthThreshold && heightThreshold) {
+            setDevToolsOpen(true);
+          }
+        };
 
-      return () => {
-        clearInterval(devToolsTimer);
-        window.removeEventListener('resize', detectDevTools);
-      };
+        const devToolsTimer = setInterval(detectDevTools, 1000);
+        window.addEventListener('resize', detectDevTools);
+
+        return () => {
+          clearInterval(devToolsTimer);
+          window.removeEventListener('resize', detectDevTools);
+        };
+      }
     }
   }, [mostrarLista, empleado]);
 

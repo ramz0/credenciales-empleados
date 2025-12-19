@@ -10,7 +10,7 @@ interface ListaEmpleadosProps {
 const getQRPath = (nombre: string): string => {
   // Convertir "BRENDA BERMEO MENDOZA" a "BRENDA_BERMEO_MENDOZA.png"
   const qrFileName = nombre.replace(/ /g, '_').toUpperCase() + '.png';
-  return `/qr_codes/${qrFileName}`;
+  return `${import.meta.env.BASE_URL}qr_codes/${qrFileName}`;
 };
 
 export default function ListaEmpleados({ empleados }: ListaEmpleadosProps) {
