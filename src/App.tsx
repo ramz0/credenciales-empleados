@@ -461,6 +461,9 @@ function App() {
                 <p className="text-center text-[10px] xs:text-xs text-green-600 mt-1">
                   Estado: VERIFICADO
                 </p>
+                <p className="text-center text-[10px] xs:text-xs text-green-700 mt-1 font-semibold">
+                  Vigencia: 2026-2027
+                </p>
               </div>
             )}
           </div>
