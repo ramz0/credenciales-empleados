@@ -12,6 +12,25 @@ const getQRPath = (nombre: string): string => {
   return `${import.meta.env.BASE_URL}qr_codes/${qrFileName}`;
 };
 
+// Función para descargar el código QR
+const downloadQR = async (nombre: string) => {
+  const qrPath = getQRPath(nombre);
+  try {
+    const response = await fetch(qrPath);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `QR_${nombre.replace(/ /g, '_').toUpperCase()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error al descargar QR:', error);
+  }
+};
+
 function App() {
   const [empleado, setEmpleado] = useState<Empleado | null>(null);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
@@ -333,15 +352,24 @@ function App() {
         {loadingState === 'success' && empleado && (
           <div>
             {/* QR Code del empleado */}
-            <div className="flex justify-center mb-3 xs:mb-4 md:mb-6">
+            <div className="flex flex-col items-center mb-3 xs:mb-4 md:mb-6">
               <img
                 src={getQRPath(empleado.nombre)}
                 alt={`QR de ${empleado.nombre}`}
-                className="w-32 h-32 xs:w-40 xs:h-40 md:w-48 md:h-48 object-contain border-2 border-gray-200 rounded-xl p-2 bg-white"
+                className="w-32 h-32 xs:w-40 xs:h-40 md:w-48 md:h-48 object-contain border-2 border-gray-200 rounded-xl p-2 bg-white mb-2 xs:mb-3"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
+              <button
+                onClick={() => downloadQR(empleado.nombre)}
+                className="px-3 py-1.5 xs:px-4 xs:py-2 bg-[#ef4444] text-white text-[10px] xs:text-xs md:text-sm rounded-lg hover:bg-[#dc2626] transition-colors active:bg-[#b91c1c] flex items-center gap-1.5 xs:gap-2"
+              >
+                <svg className="w-3 h-3 xs:w-4 xs:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Descargar QR
+              </button>
             </div>
 
             {/* Nombre del empleado */}
