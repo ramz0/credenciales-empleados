@@ -349,6 +349,13 @@ function App() {
           />
         </div>
 
+        {/* Vigencia */}
+        <div className="w-full mt-3">
+          <p className="text-center text-sm xs:text-base md:text-lg font-bold text-gray-700">
+            2026-2027
+          </p>
+        </div>
+
         {/* Título */}
         <h1 className="text-gray-800 text-xl xs:text-2xl md:text-4xl font-bold mb-1 md:mb-2">
           The Money Center
@@ -454,13 +461,6 @@ function App() {
                   {formatDateTime(currentTime)}
                 </p>
               </div>
-            </div>
-
-            {/* Vigencia */}
-            <div className="w-full mt-3">
-              <p className="text-center text-sm xs:text-base md:text-lg font-bold text-gray-700">
-                2026-2027
-              </p>
             </div>
 
             {/* Capa 3: Indicador de Integridad - Solo se muestra si es válido */}
