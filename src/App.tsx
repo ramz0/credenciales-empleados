@@ -6,9 +6,36 @@ import logoImg from '/moneycenter.png';
 
 type LoadingState = 'loading' | 'success' | 'error';
 
+// Función para normalizar nombres (eliminar acentos y caracteres especiales)
+// Debe coincidir con la función sanitize_filename del script Python
+const sanitizeName = (name: string): string => {
+  // Mapa de reemplazos de acentos y caracteres especiales
+  const replacements: { [key: string]: string } = {
+    'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U',
+    'á': 'A', 'é': 'E', 'í': 'I', 'ó': 'O', 'ú': 'U',
+    'Ñ': 'N', 'ñ': 'N',
+    'Ü': 'U', 'ü': 'U',
+  };
+
+  let result = name.toUpperCase();
+
+  // Aplicar reemplazos
+  for (const [from, to] of Object.entries(replacements)) {
+    result = result.replace(new RegExp(from, 'g'), to);
+  }
+
+  // Reemplazar espacios por guiones bajos
+  result = result.replace(/ /g, '_');
+
+  // Eliminar cualquier caracter que no sea letra, número o guión bajo
+  result = result.replace(/[^A-Z0-9_]/g, '');
+
+  return result;
+};
+
 // Función para generar la ruta del QR basada en el nombre del empleado
 const getQRPath = (nombre: string): string => {
-  const qrFileName = nombre.replace(/ /g, '_').toUpperCase() + '.png';
+  const qrFileName = sanitizeName(nombre) + '.png';
   return `${import.meta.env.BASE_URL}qr_codes/${qrFileName}`;
 };
 
