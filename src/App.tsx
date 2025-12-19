@@ -143,15 +143,6 @@ function App() {
             <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
               <div className="flex flex-col md:flex-row md:justify-between md:items-center py-4 border-b border-gray-200">
                 <span className="text-gray-600 text-sm font-semibold uppercase tracking-wide mb-1 md:mb-0">
-                  ID
-                </span>
-                <span className="text-gray-800 text-lg md:text-xl font-medium text-left md:text-right">
-                  {empleado.id}
-                </span>
-              </div>
-
-              <div className="flex flex-col md:flex-row md:justify-between md:items-center py-4 border-b border-gray-200">
-                <span className="text-gray-600 text-sm font-semibold uppercase tracking-wide mb-1 md:mb-0">
                   Puesto
                 </span>
                 <span className="text-gray-800 text-lg md:text-xl font-medium text-left md:text-right">
@@ -176,16 +167,6 @@ function App() {
                   {empleado.celular}
                 </span>
               </div>
-            </div>
-
-            {/* Botón volver a la lista */}
-            <div className="mt-6">
-              <a
-                href="."
-                className="inline-block px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
-              >
-                ← Ver todos los empleados
-              </a>
             </div>
           </div>
         )}

@@ -14,6 +14,7 @@ Estructura del Excel:
 import json
 import openpyxl
 import sys
+import uuid
 from pathlib import Path
 
 
@@ -48,8 +49,8 @@ def excel_to_json(excel_file, json_file='empleados.json'):
                 if not nombre or not gerencia:
                     continue
 
-                # Generar ID con formato 001, 002, etc.
-                empleado_id = f"{filas_procesadas + 1:03d}"
+                # Generar UUID único para cada empleado
+                empleado_id = str(uuid.uuid4())
 
                 # Limpiar y formatear datos
                 nombre = str(nombre).strip().upper()
