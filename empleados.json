@@ -1382,7 +1382,7 @@
     "id": "84015066-987d-4fac-a75c-137d19fd1bf8",
     "nombre": "EDUARDO GARCIA CHOMBO",
     "puesto": "Consultor",
-    "gerencia": "CONSULTORÍA",
+    "gerencia": "CONSULTOR",
     "celular": "55 4820 8925"
   },
   {
@@ -1396,7 +1396,7 @@
     "id": "eeca18ec-8670-40db-b5e9-f2e791b27234",
     "nombre": "KARLA PAOLA ALVARADO GALICIA",
     "puesto": "Gerente",
-    "gerencia": "THE MONEY CENTER MOD 40",
+    "gerencia": "GERENTE MOD 40",
     "celular": "55 66 91 54 06"
   },
   {
@@ -1424,14 +1424,14 @@
     "id": "20cc4875-4021-4116-9928-dc625c55235a",
     "nombre": "PATRICIA GONZALEZ MARTINEZ",
     "puesto": "Asistente de Préstamos",
-    "gerencia": "ADMINISTRACIÓN",
+    "gerencia": "ASISTENTE DE PRESTAMOS",
     "celular": "56 4002 6090"
   },
   {
     "id": "36c6abee-ecf5-4f12-bded-91b630961b50",
     "nombre": "THALIA EDITH BARRANCO ESPINOSA",
     "puesto": "Asistente de Dirección",
-    "gerencia": "DIRECCIÓN",
+    "gerencia": "ASISTENTE DE DIRECCION",
     "celular": "55 47 93 13 95"
   }
 ]
