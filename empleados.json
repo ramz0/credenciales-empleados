@@ -1279,5 +1279,159 @@
     "puesto": "Asesor",
     "gerencia": "THE MONEY CENTER MTY",
     "celular": "81 12 51 59 19"
+  },
+  {
+    "id": "bbe98f67-f778-47d5-95c1-e16184f5b900",
+    "nombre": "NANCY LIZBETH MONTERRUBIO GUTIÉRREZ",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 1",
+    "celular": "55 1581 0367"
+  },
+  {
+    "id": "295fd47e-a1b1-4094-a5e4-d6cacf5cc34a",
+    "nombre": "SAUL GIOVANNI MANDUJANO MARTÍNEZ",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 2",
+    "celular": "56 1437 6744"
+  },
+  {
+    "id": "170df3a6-0c33-4eac-a2a4-e1f71c206ffb",
+    "nombre": "MARÍA ANGÉLICA PÉREZ ÁLVAREZ",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 3",
+    "celular": "55 2095 6400"
+  },
+  {
+    "id": "3d93904a-0100-4de0-ad47-96f28f31d86c",
+    "nombre": "MARIBEL MARÍN PÉREZ",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 4",
+    "celular": "55 4574 5940"
+  },
+  {
+    "id": "8af80834-2b02-4e30-afd1-c8c48058ab20",
+    "nombre": "DAVID REYNEROS REYES",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 5",
+    "celular": "55 2095 7489"
+  },
+  {
+    "id": "ad3dc8f3-71d1-46ab-a220-a8da8ae78759",
+    "nombre": "JOSÉ LÓPEZ TREJO",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 6",
+    "celular": "55 3996 0208"
+  },
+  {
+    "id": "87d5edfe-96f3-4085-9d8c-e2533a1114c3",
+    "nombre": "LEONARDO LEON SALAZAR",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 7",
+    "celular": "55 3403 4680"
+  },
+  {
+    "id": "ff869451-3548-4b87-9be7-51b0a8c5aa3f",
+    "nombre": "JULIETA BAUTISTA QUINTANA",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 8",
+    "celular": "55 4343 1216"
+  },
+  {
+    "id": "0e3e3ab0-e928-4d3f-ab3f-95c2931e3fc5",
+    "nombre": "BRENDA  ÁLVAREZ MORAN",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 9",
+    "celular": "55 3900 2348"
+  },
+  {
+    "id": "2f913a70-32df-4246-9504-2af5d32fdfa9",
+    "nombre": "RUBÉN FRANCISCO SÁNCHEZ JIMÉNEZ",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 10",
+    "celular": "55 3434 5056"
+  },
+  {
+    "id": "f78dee4b-187a-44aa-ade7-fb8bb05e4f2e",
+    "nombre": "ANA JAZMIN VALENCIA MARIN",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER 11",
+    "celular": "55 4083 5579"
+  },
+  {
+    "id": "e73f3a6d-4108-4bc8-a61b-94fc15515d83",
+    "nombre": "VÍCTOR HUGO AGUILAR AMADOR",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER CA",
+    "celular": "55 1903 8189"
+  },
+  {
+    "id": "5592ed08-f611-48d9-a265-d149ee195ca4",
+    "nombre": "ALAN ALEX PALAFOX AGUILAR",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER MSN",
+    "celular": "55 4129 8609"
+  },
+  {
+    "id": "a3354872-3dcf-4564-9dbe-2cad941f9735",
+    "nombre": "TATIANA MARLEN MORAN AGÜEROS",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER MSN2",
+    "celular": "56 1575 8880"
+  },
+  {
+    "id": "84015066-987d-4fac-a75c-137d19fd1bf8",
+    "nombre": "EDUARDO GARCIA CHOMBO",
+    "puesto": "Consultor",
+    "gerencia": "CONSULTORÍA",
+    "celular": "55 4820 8925"
+  },
+  {
+    "id": "5cf9e6a2-f50f-42dd-bb00-5a50dbe74150",
+    "nombre": "MARISOL CERVANTES GUZMÁN",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER MTY2-1",
+    "celular": "771 503 7777"
+  },
+  {
+    "id": "eeca18ec-8670-40db-b5e9-f2e791b27234",
+    "nombre": "KARLA PAOLA ALVARADO GALICIA",
+    "puesto": "Gerente",
+    "gerencia": "THE MONEY CENTER MOD 40",
+    "celular": "55 66 91 54 06"
+  },
+  {
+    "id": "974865f0-ac2e-4ca4-b793-120b2febc789",
+    "nombre": "GERARDO MARÍN PÉREZ",
+    "puesto": "Director",
+    "gerencia": "THE MONEY CENTER MSN",
+    "celular": "55 1667 0614"
+  },
+  {
+    "id": "73249da6-8d3a-4a55-9543-3c4164d23ccc",
+    "nombre": "DAVID FRANCISCO GALICIA CAVAZOS",
+    "puesto": "Director",
+    "gerencia": "THE MONEY CENTER MTY",
+    "celular": "81 8252 5013"
+  },
+  {
+    "id": "1b803eb0-2a94-4db2-bf83-b5a27eefd277",
+    "nombre": "ARTURO ELIZONDO",
+    "puesto": "Director",
+    "gerencia": "THE MONEY CENTER MTY 1",
+    "celular": "81 1817 2107"
+  },
+  {
+    "id": "20cc4875-4021-4116-9928-dc625c55235a",
+    "nombre": "PATRICIA GONZALEZ MARTINEZ",
+    "puesto": "Asistente de Préstamos",
+    "gerencia": "ADMINISTRACIÓN",
+    "celular": "56 4002 6090"
+  },
+  {
+    "id": "36c6abee-ecf5-4f12-bded-91b630961b50",
+    "nombre": "THALIA EDITH BARRANCO ESPINOSA",
+    "puesto": "Asistente de Dirección",
+    "gerencia": "DIRECCIÓN",
+    "celular": "55 47 93 13 95"
   }
 ]
