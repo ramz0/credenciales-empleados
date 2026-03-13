@@ -4,4 +4,5 @@ export interface Empleado {
   puesto: string;
   gerencia: string;
   celular: string;
+  baja?: boolean;
 }

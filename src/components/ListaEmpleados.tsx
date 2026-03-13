@@ -164,16 +164,23 @@ export default function ListaEmpleados({ empleados }: ListaEmpleadosProps) {
             <a
               key={empleado.id}
               href={`?id=${empleado.id}`}
-              className="bg-white rounded-xl shadow-lg p-2 xs:p-3 md:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group active:scale-95"
+              className={`rounded-xl shadow-lg p-2 xs:p-3 md:p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group active:scale-95 ${empleado.baja ? 'bg-red-50 border-2 border-red-400' : 'bg-white'}`}
             >
               {/* ID Badge - Truncado para móviles */}
               <div className="flex justify-between items-start mb-1.5 xs:mb-2 md:mb-3">
                 <span className="bg-[#ef4444] text-white text-[10px] xs:text-xs font-bold px-1.5 xs:px-2 md:px-3 py-0.5 md:py-1 rounded-full truncate max-w-[70%]" title={`ID: ${empleado.id}`}>
                   ID: {empleado.id.substring(0, 8)}...
                 </span>
-                <span className="text-gray-400 group-hover:text-[#ef4444] transition-colors text-base xs:text-lg md:text-xl">
-                  →
-                </span>
+                <div className="flex items-center gap-1.5">
+                  {empleado.baja && (
+                    <span className="bg-red-600 text-white text-[9px] xs:text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                      BAJA
+                    </span>
+                  )}
+                  <span className="text-gray-400 group-hover:text-[#ef4444] transition-colors text-base xs:text-lg md:text-xl">
+                    →
+                  </span>
+                </div>
               </div>
 
               {/* QR Code */}

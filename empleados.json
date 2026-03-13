@@ -1257,7 +1257,8 @@
     "nombre": "RODRIGO ORTIZ ZAVALA",
     "puesto": "Asesor",
     "gerencia": "THE MONEY CENTER TLV",
-    "celular": ""
+    "celular": "",
+    "baja": true
   },
   {
     "id": "b7de65ec-c156-4c90-ae43-d9615d1c6752",
