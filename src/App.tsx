@@ -454,8 +454,8 @@ function App() {
             {/* Capa 2: Timestamp Dinámico */}
             <div className="w-full border-t-2 border-gray-200 mt-4 pt-3">
               <div className="text-center">
-                <p className="text-gray-500 text-[10px] xs:text-xs uppercase tracking-wide mb-1">
-                  Verificado
+                <p className={`text-[10px] xs:text-xs uppercase tracking-wide mb-1 font-bold ${empleado.baja ? 'text-red-600' : 'text-gray-500'}`}>
+                  {empleado.baja ? 'DADO DE BAJA' : 'Verificado'}
                 </p>
                 <p className="text-gray-800 text-xs xs:text-sm md:text-base font-mono font-semibold">
                   {formatDateTime(currentTime)}
@@ -463,8 +463,20 @@ function App() {
               </div>
             </div>
 
-            {/* Capa 3: Indicador de Integridad - Solo se muestra si es válido */}
-            {isIntegrityValid && (
+            {/* Capa 3: Indicador de estado */}
+            {empleado.baja ? (
+              <div className="w-full mt-2 px-3 py-2 rounded-lg bg-red-50 border border-red-300">
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-lg">✕</span>
+                  <span className="text-xs xs:text-sm font-semibold text-red-700">
+                    Perfil no válido
+                  </span>
+                </div>
+                <p className="text-center text-[10px] xs:text-xs text-red-600 mt-1">
+                  Estado: DADO DE BAJA
+                </p>
+              </div>
+            ) : isIntegrityValid ? (
               <div className="w-full mt-2 px-3 py-2 rounded-lg bg-green-50">
                 <div className="flex items-center justify-center gap-2">
                   <span className="text-lg">✓</span>
@@ -476,7 +488,7 @@ function App() {
                   Estado: VERIFICADO
                 </p>
               </div>
-            )}
+            ) : null}
           </div>
         )}
       </div>

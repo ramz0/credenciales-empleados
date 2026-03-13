@@ -207,7 +207,7 @@ export default function ListaEmpleados({ empleados }: ListaEmpleadosProps) {
               </div>
 
               {/* Nombre */}
-              <h3 className="text-gray-800 font-bold text-xs xs:text-sm md:text-lg mb-1 md:mb-2 group-hover:text-[#ef4444] transition-colors leading-tight">
+              <h3 className={`font-bold text-xs xs:text-sm md:text-lg mb-1 md:mb-2 transition-colors leading-tight ${empleado.baja ? 'text-red-600 line-through' : 'text-gray-800 group-hover:text-[#ef4444]'}`}>
                 {empleado.nombre}
               </h3>
 
