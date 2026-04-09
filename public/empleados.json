@@ -1021,12 +1021,19 @@
     "gerencia": "THE MONEY CENTER 1",
     "celular": "55 34 56 56 23"
   },
-  {
+    {
     "id": "a9e61dc8-c180-41e7-86f1-7da4e9ed1774",
     "nombre": "MARTIN CARBAJAL SANAGUSTIN",
     "puesto": "Asesor",
     "gerencia": "THE MONEY CENTER 6",
     "celular": "729 142 20 95"
+  },
+  {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "nombre": "MARTIN CARLOS MONTAÑO BRAVO",
+    "puesto": "Asesor Previsional",
+    "gerencia": "SIN GERENCIA",
+    "celular": "55 4844 2225"
   },
   {
     "id": "d60d9708-4a8d-4e30-bcd6-3f71edd1ec99",
